@@ -3,7 +3,7 @@
 -- ============================================================
 
 --[[ GANTI: URL raw script ini (GitHub/Pastebin) biar bisa reload tiap teleport ]]
-local URL_SCRIPT = "https://raw.githubusercontent.com/USER/REPO/main/AutoHopUnrankedSolo.lua"
+local URL_SCRIPT = "https://raw.githubusercontent.com/genryu442/test3/refs/heads/main/AutoHopUnranked_ChestFarm_WallScan.lua"
 
 --[[ GANTI: PlaceId lobby & planet (kalau kamu tahu) ]]
 local PLACE_LOBBY  = 0   -- 0 = auto-detect via IsLobby
