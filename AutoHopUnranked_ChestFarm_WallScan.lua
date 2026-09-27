@@ -1253,47 +1253,38 @@ local function scanTrack()
   _G.__ScanRunning = true
 
   local walls = getWallScanPoints()
+  local LINEAR_START_X = -520
   if #walls == 0 then
-    say("[WallScan] Tidak ada wall yang ditemukan.")
-    _G.__ScanRunning = false
-    _G.TrackScan = false
-    _G.ScanInfo = "-"
-    setScanBtn()
-    return
+    say("[WallScan] Tidak ada wall — fallback LINEAR dari awal x=-520 → " .. SCAN_END_X)
   end
 
-  -- Maju per-wall ke depan: mulai dari wall terdekat di depan player, bukan selalu index 1.
+  -- Selalu dari TITIK AWAL (wall X terkecil) sampai akhir. Abaikan posisi player
+  -- dan sisa index lama biar tiap masuk Earth full run.
   local r0 = hrp()
   local playerX = (r0 and r0.Position.X) or -1e9
   local startIndex = 1
-  local bestAhead, bestAheadD = nil, 1e9
-  for i, w in ipairs(walls) do
-    if w.X >= playerX - 50 then
-      local d = w.X - playerX
-      if d < bestAheadD then
-        bestAhead, bestAheadD = i, d
-      end
-    end
-  end
-  if bestAhead then
-    startIndex = bestAhead
-  elseif type(_G.ScanWallIndex) == "number" then
-    startIndex = math.max(1, math.floor(_G.ScanWallIndex))
-    if startIndex > #walls then startIndex = #walls end
-  end
+  _G.ScanWallIndex = 1
+  _G.ScanLinearX = nil
 
   local homeY = (r0 and r0.Position.Y) or 20
+  local homeZ = (r0 and r0.Position.Z) or 0
 
-  say(string.format("[WallScan] START — %d wall, playerX=%d, mulai %d/%d (maju per-wall sampai akhir).",
-    #walls, math.floor(playerX), startIndex, #walls))
-
-  -- HYBRID: fase wall dulu, lanjut linear sampai SCAN_END_X (36000).
+  -- HYBRID: fase wall dulu dari AWAL, lanjut linear sampai SCAN_END_X (36000).
   local phase = "wall"
   local linearX, linearZ = nil, nil
   local lastWallX, lastWallZ = nil, nil
   if #walls > 0 then
+    say(string.format("[WallScan] START dari AWAL — %d wall, wall1 x=%d, wallAkhir x=%d.",
+      #walls, math.floor(walls[1].X), math.floor(walls[#walls].X)))
     lastWallX = walls[#walls].X
     lastWallZ = walls[#walls].Pos.Z
+  else
+    -- Langsung linear dari titik awal.
+    phase = "linear"
+    linearX = LINEAR_START_X
+    linearZ = homeZ
+    say(string.format("[WallScan] START LINEAR dari AWAL x=%d → %d step %d.",
+      LINEAR_START_X, SCAN_END_X, SCAN_STEP))
   end
   local function lootAt(scanPos, label)
     local found = {}
