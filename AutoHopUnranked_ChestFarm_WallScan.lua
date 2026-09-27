@@ -131,8 +131,8 @@ if IN_LOBBY and LOOP_MODE then
     -- game (cuma Teleport yang di-wire). Jadi prompt disconnect macet. Clear otomatis:
     -- invoke EndSession langsung + sembunyikan frame, biar autohop lanjut.
     task.spawn(function()
-        for _ = 1, 30 do
-            if isStopFlag() then break end
+        -- Watcher permanen selama di Lobby: prompt disconnect bisa nongol kapan saja.
+        while LOOP_MODE and not isStopFlag() do
             local done = false
             pcall(function()
                 local sid = LP:GetAttribute("PendingSessionId")
@@ -153,7 +153,6 @@ if IN_LOBBY and LOOP_MODE then
                     done = true
                 end
             end)
-            if done then break end
             task.wait(2)
         end
     end)
