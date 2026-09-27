@@ -1,4 +1,4 @@
--- AutoHopUnranked_ChestFarm_WallScan.lua  (SINGLE-EXECUTE / PERSISTENT / MOBILE-READY / LOW POLY)
+﻿-- AutoHopUnranked_ChestFarm_WallScan.lua  (SINGLE-EXECUTE / PERSISTENT / MOBILE-READY / LOW POLY)
 -- Loop otomatis: Lobby -> hop Unranked Solo -> Earth -> Chest Farm -> Lobby -> ...
 -- EndSession v3 terintegrasi sebagai fallback + semua fix konflik.
 -- vWallScan: per-wall maju + linear sampai 36000, no-dodge/aim, scan-noclip, skip mimic.
@@ -12,7 +12,7 @@ local LOADER_CODE = 'loadstring(game:HttpGet("' .. LOADER_URL .. '"))()'
 -- ============================================================
 -- BAGIAN 0: LOOP MODE + LIVE STOP FLAG
 -- ============================================================
--- ⭐ FIX: STOP flag dibaca live (bukan snapshot)
+-- â­ FIX: STOP flag dibaca live (bukan snapshot)
 local function isStopFlag()
     if getgenv and getgenv().AutoHopLoopStop == true then return true end
     if _G and _G.AutoHopLoopStop == true then return true end
@@ -48,7 +48,7 @@ do
     end
 end
 
--- ⭐ FIX: Anti-dobel requeue
+-- â­ FIX: Anti-dobel requeue
 local lastRequeue = 0
 local function requeueSelf()
     if not LOOP_MODE then
@@ -81,7 +81,7 @@ if LOOP_MODE then
     requeueSelf()
 end
 
--- ⭐ FIX: Hook OnTeleport cek stop flag
+-- â­ FIX: Hook OnTeleport cek stop flag
 task.spawn(function()
     pcall(function()
         local lp = game:GetService("Players").LocalPlayer
@@ -384,7 +384,7 @@ local function applyLowPoly()
         end
     end)
 
-    print("[LowPoly] ON — chest tetap utuh.")
+    print("[LowPoly] ON â€” chest tetap utuh.")
 end
 
 applyLowPoly()
@@ -412,7 +412,7 @@ Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 28)
 title.BackgroundTransparency = 1
-title.Text = "🟣 Chest Farm"
+title.Text = "ðŸŸ£ Chest Farm"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 15
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -435,7 +435,7 @@ status.Name = "Status"
 status.Size = UDim2.new(1, -20, 0, 140)
 status.Position = UDim2.new(0, 10, 0, 80)
 status.BackgroundTransparency = 1
-status.Text = "Status: FARM 🟢\nLoot: 0 | Skip: 0\nLocked: 0\nScan: -"
+status.Text = "Status: FARM ðŸŸ¢\nLoot: 0 | Skip: 0\nLocked: 0\nScan: -"
 status.Font = Enum.Font.Gotham
 status.TextSize = 13
 status.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -455,7 +455,7 @@ local SAFE_HP_EXIT  = 0.60
 local SAFE_FLOAT_STUDS = 100
 local SAFE_POLL     = 0.25
 local SCAN_STEP = 200
-local SCAN_END_X = 36000
+local SCAN_END_DIST = 37000
 local SCAN_LOOT_R = 1200
 local SCAN_WAIT_STREAM = 0.8
 -- ANTI-MOB / AIM-DODGE DIHAPUS TOTAL (hemat CPU, anti lag). SafeMode tetap ada.
@@ -721,9 +721,9 @@ end)
 function refresh()
   pcall(function()
     local mode = "IDLE"
-    if _G.SafeMode then mode = "SAFE ⛑️"
-    elseif _G.ChestFarm then mode = "FARM 🟢"
-    elseif _G.TrackScan then mode = "SCAN 🟢"
+    if _G.SafeMode then mode = "SAFE â›‘ï¸"
+    elseif _G.ChestFarm then mode = "FARM ðŸŸ¢"
+    elseif _G.TrackScan then mode = "SCAN ðŸŸ¢"
     end
     local cc = getCores()
     if coresStart == nil and cc and cc >= 0 then coresStart = cc end
@@ -868,7 +868,7 @@ local function waitRecovery()
       exitSafeMode()
       return false
     end
-    if isStopFlag() then  -- ⭐
+    if isStopFlag() then  -- â­
       exitSafeMode()
       return false
     end
@@ -888,7 +888,7 @@ local function waitRecovery()
   return false
 end
 
--- ⭐ FIX: Helper untuk matikan semua loop + release anchor
+-- â­ FIX: Helper untuk matikan semua loop + release anchor
 local function hardStopAll()
     print("[Kill] Hard stop all loops + release anchor.")
     _G.ChestFarm = false
@@ -920,7 +920,7 @@ end
 -- EndSession v3 (KODE ASLI KAMU, hanya ditambah hardStopAll di awal)
 -- ============================================================
 local function endSessionV3()
-    -- ⭐ FIX: matikan semua loop + release anchor SEBELUM invoke
+    -- â­ FIX: matikan semua loop + release anchor SEBELUM invoke
     hardStopAll()
     task.wait(0.5)
 
@@ -962,7 +962,7 @@ local function endSessionV3()
     print("[ES] step 7 selesai. ok:", s, "res:", r)
 
     if s then
-        print("[ES] BERHASIL — session ditutup.")
+        print("[ES] BERHASIL â€” session ditutup.")
         return true
     else
         warn("[ES] GAGAL invoke:", r)
@@ -971,7 +971,7 @@ local function endSessionV3()
 end
 
 -- ============================================================
--- gotoLobbyFinish — retry 5x, fallback EndSession v3
+-- gotoLobbyFinish â€” retry 5x, fallback EndSession v3
 -- ============================================================
 local function gotoLobbyFinish()
   if not AUTO_LOBBY_FINISH then return end
@@ -992,7 +992,7 @@ local function gotoLobbyFinish()
 
   if svc then
     for attempt = 1, 5 do
-      -- ⭐ FIX: cek stop flag setiap attempt
+      -- â­ FIX: cek stop flag setiap attempt
       if isStopFlag() then
         say("[Loop] Stop flag aktif di tengah retry -> abort.")
         break
@@ -1017,7 +1017,7 @@ local function gotoLobbyFinish()
     return
   end
 
-  -- Semua gagal → EndSession v3 + stop loop
+  -- Semua gagal â†’ EndSession v3 + stop loop
   say("[Fallback] TeleportToLobby gagal 5x -> EndSession v3 + STOP LOOP.")
   endSessionV3()
 
@@ -1032,7 +1032,7 @@ local function gotoLobbyFinish()
       if ok2 and svc2 then
           local ok3, v = pcall(function() return svc2.RF.IsLobby:InvokeServer() end)
           if ok3 and v == true then
-              say("✅ Sudah di Lobby. Script DIAM (loop mati).")
+              say("âœ… Sudah di Lobby. Script DIAM (loop mati).")
               return
           end
       end
@@ -1074,7 +1074,7 @@ end
 
 local function openChest(entry)
   if _G.SafeMode then return "safe-mode" end
-  if isStopFlag() then return "stop-flag" end  -- ⭐
+  if isStopFlag() then return "stop-flag" end  -- â­
   if entry.Model and SKIP_MIMIC and isMimic(entry.Model) then
     markOpened(entry.Model, entry.Pos, entry.Model.Name)
     mimicSkipped += 1
@@ -1092,7 +1092,7 @@ local function openChest(entry)
 
   for attempt = 1, MAX_OPEN_RETRY do
     if _G.SafeMode then return "safe-mode" end
-    if isStopFlag() then return "stop-flag" end  -- ⭐
+    if isStopFlag() then return "stop-flag" end  -- â­
     if hpFrac() < SAFE_HP_ENTER then return "low-hp" end
     r = hrp()
     if not r then return "no-hrp" end
@@ -1170,123 +1170,63 @@ local function setScanBtn()
   refresh()
 end
 
--- MODE POLA: maju per-wall ke depan sampai wall terakhir (FinalWall paling jauh).
-local WALL_SCAN_OFFSET = Vector3.new(0, 0, 8)
 
-local function isWallNode(inst)
-  if not (inst:IsA("Model") or inst:IsA("BasePart") or inst:IsA("MeshPart")) then
-    return false
-  end
-  local n = string.lower(inst.Name)
-  -- Kecualikan UI / Bar, hanya node fisik
-  if string.find(n, "healthbar", 1, true) then return false end
-  if string.find(n, "healthgradient", 1, true) then return false end
-  if string.find(n, "progress", 1, true) then return false end
-  if string.find(n, "barrier", 1, true) then return false end
-  if string.find(n, "rockwall", 1, true) then return true end
-  if string.find(n, "finalwall", 1, true) then
-    -- Skip anak Tutorial di dalam FinalWall_Node biar tidak dobel titik
-    if string.find(n, "tutorial", 1, true) then return false end
-    return true
-  end
-  return false
-end
-
-local function isFinalWallName(name)
-  local n = string.lower(name or "")
-  return string.find(n, "finalwall", 1, true) ~= nil
-end
-
-local function getWallScanPoints()
-  local points = {}
-  local seen = {}
-
-  -- 1) Folder utama dulu (progresi awal)
-  local mainFolder = workspace:FindFirstChild("RockWalls")
-  -- 2) Sapu seluruh workspace biar wall di Chunks.Layers.* / CutScene*Props ikut kebaca
-  local scopes = {}
-  if mainFolder then table.insert(scopes, mainFolder) end
-  table.insert(scopes, workspace)
-
-  for _, scope in ipairs(scopes) do
-    local list = nil
-    if scope == workspace then
-      list = workspace:GetDescendants()
-    else
-      list = scope:GetDescendants()
-    end
-    for _, wall in ipairs(list) do
-      if isWallNode(wall) then
-        local ok, cf = pcall(function() return wall:GetPivot() end)
-        if ok and cf then
-          -- Dedupe: satu titik per posisi (±25 stud) biar parent+anak tidak dobel
-          local key = math.floor(cf.Position.X / 25) .. "_" .. math.floor(cf.Position.Z / 25)
-          if not seen[key] then
-            seen[key] = true
-            table.insert(points, {
-              Instance = wall,
-              Name = wall.Name,
-              Pos = cf.Position,
-              X = cf.Position.X,
-              IsFinal = isFinalWallName(wall.Name),
-            })
-          end
+-- ===== SCAN TRACK (follow rail direction, bukan cuma X) =====
+local function getTrackDirection(pos)
+  for _, name in ipairs({"Track", "Rail", "Rails", "Path", "Road"}) do
+    local obj = workspace:FindFirstChild(name)
+    if obj then
+      local ok, cf = pcall(function() return obj:GetPivot() end)
+      if ok and cf then
+        local dir = (cf.Position - pos)
+        dir = Vector3.new(dir.X, 0, dir.Z)
+        if dir.Magnitude > 5 then
+          return dir.Unit
         end
       end
     end
-    -- Kalau folder utama sudah dapat titik, tetap lanjut sapu workspace untuk ujung akhir.
-    -- Tidak break di sini.
   end
-
-  table.sort(points, function(a, b)
-    if a.X == b.X then
-      return tostring(a.Name) < tostring(b.Name)
+  local r = hrp()
+  if r then
+    local look = r.CFrame.LookVector
+    look = Vector3.new(look.X, 0, look.Z)
+    if look.Magnitude > 0.01 then
+      return look.Unit
     end
-    return a.X < b.X
-  end)
+  end
+  return Vector3.new(1, 0, 0)
+end
 
-  return points
+local function trackStart()
+  local dr = workspace:FindFirstChild("Drill")
+  if dr then
+    local ok, cf = pcall(function() return dr:GetPivot() end)
+    if ok and cf then return cf.Position end
+  end
+  local r = hrp()
+  return r and r.Position or Vector3.new(-740, 20, -771.5)
 end
 
 local function scanTrack()
   if _G.__ScanRunning then return end
   _G.__ScanRunning = true
 
-  local walls = getWallScanPoints()
-  local LINEAR_START_X = -520
-  if #walls == 0 then
-    say("[WallScan] Tidak ada wall — fallback LINEAR dari awal x=-520 → " .. SCAN_END_X)
-  end
+  local start = trackStart()
+  local direction = getTrackDirection(start)
 
-  -- Selalu dari TITIK AWAL (wall X terkecil) sampai akhir. Abaikan posisi player
-  -- dan sisa index lama biar tiap masuk Earth full run.
-  local r0 = hrp()
-  local playerX = (r0 and r0.Position.X) or -1e9
-  local startIndex = 1
-  _G.ScanWallIndex = 1
-  _G.ScanLinearX = nil
-
-  local homeY = (r0 and r0.Position.Y) or 20
-  local homeZ = (r0 and r0.Position.Z) or 0
-
-  -- HYBRID: fase wall dulu dari AWAL, lanjut linear sampai SCAN_END_X (36000).
-  local phase = "wall"
-  local linearX, linearZ = nil, nil
-  local lastWallX, lastWallZ = nil, nil
-  if #walls > 0 then
-    say(string.format("[WallScan] START dari AWAL — %d wall, wall1 x=%d, wallAkhir x=%d.",
-      #walls, math.floor(walls[1].X), math.floor(walls[#walls].X)))
-    lastWallX = walls[#walls].X
-    lastWallZ = walls[#walls].Pos.Z
+  local distance = 0
+  if type(_G.ScanDist) == "number" and _G.ScanDist >= 0 and _G.ScanDist <= SCAN_END_DIST then
+    distance = _G.ScanDist
+    say("Resuming scan from dist=" .. math.floor(distance) .. ".")
   else
-    -- Langsung linear dari titik awal.
-    phase = "linear"
-    linearX = LINEAR_START_X
-    linearZ = homeZ
-    say(string.format("[WallScan] START LINEAR dari AWAL x=%d → %d step %d.",
-      LINEAR_START_X, SCAN_END_X, SCAN_STEP))
+    _G.ScanDist = 0
   end
-  local function lootAt(scanPos, label)
+
+  local homeY = start.Y
+  say(string.format("START scan dari AWAL rel dir=(%.2f,%.2f) -> %.0f studs, step %d.",
+    direction.X, direction.Z, SCAN_END_DIST, SCAN_STEP))
+
+  local function lootAtRail(scanPos, label)
     local found = {}
     for _, e in ipairs(allChests()) do
       if (e.Pos - scanPos).Magnitude <= SCAN_LOOT_R then
@@ -1304,19 +1244,17 @@ local function scanTrack()
       if e.Model.Parent
         and not isLocked(e.Model)
         and not isOpened(e.Model, e.Pos, e.Model.Name) then
-        -- Ke chest: noclip OFF biar pijakannya normal.
         stopScanNoClip()
         task.wait(0.15)
         local ok, res = pcall(openChest, e)
         if not ok then say("Error: " .. tostring(res)) end
-        -- Balik ke jalur scan: noclip ON lagi buat masuk wall.
         if _G.TrackScan and not isStopFlag() then
           startScanNoClip()
           local rBack = hrp()
           if rBack then
             pcall(function()
               rBack.AssemblyLinearVelocity = Vector3.zero
-              rBack.CFrame = CFrame.new(scanPos, scanPos + Vector3.new(1, 0, 0))
+              rBack.CFrame = CFrame.new(scanPos, scanPos + direction)
             end)
           end
           task.wait(0.1)
@@ -1327,7 +1265,6 @@ local function scanTrack()
     return #found
   end
 
-  -- Scan maju: noclip ON dari awal biar bisa masuk ke dalam wall.
   startScanNoClip()
 
   while _G.TrackScan and not isStopFlag() do
@@ -1337,72 +1274,19 @@ local function scanTrack()
 
     local h0 = hum()
     if not h0 or h0.Health <= 0 then
-      say("Dead - waiting respawn...")
+      say("Dead - waiting respawn, scan continues...")
       pcall(function() player.CharacterAdded:Wait() end)
       task.wait(1.5)
       _G.SafeMode = false
     else
       if hpFrac() < HP_STOP_FRAC then
-        say("HP low - retreat.")
+        say("HP critically low - retreat + regen, not stop.")
         waitRecovery()
       end
 
-      if phase == "wall" and startIndex > #walls then
-        -- Per-wall habis → lanjut linear ke depan sampai SCAN_END_X.
-        phase = "linear"
-        local rL = hrp()
-        local curX = (rL and rL.Position.X) or lastWallX or playerX
-        linearX = math.max(curX + SCAN_STEP, (lastWallX or curX) + SCAN_STEP)
-        linearZ = lastWallZ or (rL and rL.Position.Z) or 0
-        say(string.format("[WallScan] WALL habis → LINEAR x=%d → %d step %d.",
-          math.floor(linearX), SCAN_END_X, SCAN_STEP))
-      end
-
-      if phase == "linear" then
-        if linearX == nil then
-          phase = "wall"
-        elseif linearX > SCAN_END_X then
-          say("Wall+Linear scan COMPLETE.")
-          _G.ScanWallIndex = nil
-          _G.ScanLinearX = nil
-          _G.TrackScan = false
-          _G.ScanInfo = "-"
-          setScanBtn()
-          gotoLobbyFinish()
-          break
-        else
-          local r = hrp()
-          if not r then
-            task.wait(1)
-          else
-            ensureStanding()
-            startScanNoClip()
-            local scanPos = Vector3.new(linearX, homeY, linearZ)
-            pcall(function()
-              r.AssemblyLinearVelocity = Vector3.zero
-              r.CFrame = CFrame.new(scanPos, scanPos + Vector3.new(1, 0, 0))
-            end)
-            _G.ScanInfo = string.format("LINEAR x=%d/%d", math.floor(linearX), SCAN_END_X)
-            refresh()
-            simpleWait(SCAN_WAIT_STREAM)
-            lootAt(scanPos, string.format("[Linear] x=%d", math.floor(linearX)))
-            local r2 = hrp()
-            if r2 then
-              pcall(function()
-                startScanNoClip()
-                r2.AssemblyLinearVelocity = Vector3.zero
-                r2.CFrame = CFrame.new(scanPos, scanPos + Vector3.new(1, 0, 0))
-              end)
-            end
-            simpleWait(0.2)
-            linearX += SCAN_STEP
-            _G.ScanLinearX = linearX
-          end
-        end
-      else
-      if startIndex > #walls then
-        say("Wall scan COMPLETE.")
-        _G.ScanWallIndex = nil
+      if distance > SCAN_END_DIST then
+        say("Scan COMPLETE (end of line).")
+        _G.ScanDist = nil
         _G.TrackScan = false
         _G.ScanInfo = "-"
         setScanBtn()
@@ -1410,96 +1294,59 @@ local function scanTrack()
         break
       end
 
-      local wall = walls[startIndex]
       local r = hrp()
-
       if not r then
         task.wait(1)
-      elseif not wall or not wall.Instance or not wall.Instance.Parent then
-        -- Wall hilang/berubah: refresh lalu tetap maju ke depan (cari X terdekat >= posisi terakhir).
-        local lastX = (wall and wall.X) or (r and r.Position.X) or -1e9
-        walls = getWallScanPoints()
-        local nextIdx = #walls + 1
-        for i, w in ipairs(walls) do
-          if w.X >= lastX - 25 then
-            nextIdx = i
-            break
-          end
-        end
-        if nextIdx > #walls then
-          -- Tidak ada wall lagi di depan → pindah ke fase linear, jangan langsung lobby.
-          phase = "linear"
-          local rL2 = hrp()
-          local curX2 = (rL2 and rL2.Position.X) or lastX
-          linearX = curX2 + SCAN_STEP
-          linearZ = lastWallZ or (rL2 and rL2.Position.Z) or 0
-          say(string.format("[WallScan] WALL habis (refresh) → LINEAR x=%d → %d.",
-            math.floor(linearX), SCAN_END_X))
-          startIndex = #walls + 1
-          _G.ScanWallIndex = startIndex
-        else
-        startIndex = nextIdx
-        _G.ScanWallIndex = startIndex
-        end
       else
         ensureStanding()
-        -- Scan maju: pastikan noclip ON biar bisa masuk ke dalam wall.
-        startScanNoClip()
 
-        -- Posisi scan diarahkan ke setiap wall, sedikit digeser dari rel
-        -- agar tidak spawn tepat di dalam geometry wall.
+        if (math.floor(distance / SCAN_STEP) % 3) == 0 then
+          local newDir = getTrackDirection(r.Position)
+          direction = direction:Lerp(newDir, 0.5).Unit
+        end
+
         local scanPos = Vector3.new(
-          wall.Pos.X + WALL_SCAN_OFFSET.X,
+          start.X + direction.X * distance,
           homeY,
-          wall.Pos.Z + WALL_SCAN_OFFSET.Z
+          start.Z + direction.Z * distance
         )
 
+        startScanNoClip()
         pcall(function()
           r.AssemblyLinearVelocity = Vector3.zero
-          r.CFrame = CFrame.new(scanPos, wall.Pos)
+          r.CFrame = CFrame.new(scanPos, scanPos + direction)
         end)
 
-        _G.ScanInfo = string.format(
-          "WALL %d/%d: %s x=%d",
-          startIndex, #walls, wall.Name, math.floor(wall.Pos.X)
-        )
+        _G.ScanInfo = "dist=" .. math.floor(distance) .. "/" .. SCAN_END_DIST
         refresh()
 
         simpleWait(SCAN_WAIT_STREAM)
 
-        -- Pakai lootAt biar ke chest otomatis noclip OFF, balik scan noclip ON.
-        lootAt(scanPos, string.format("[WallScan] %s x=%d",
-          wall.Name, math.floor(wall.Pos.X)))
+        lootAtRail(scanPos, "dist=" .. math.floor(distance))
 
-          local r2 = hrp()
-          if r2 then
-            pcall(function()
-              startScanNoClip()
-              r2.AssemblyLinearVelocity = Vector3.zero
-              r2.CFrame = CFrame.new(scanPos, wall.Pos)
-            end)
-          end
+        local r2 = hrp()
+        if r2 then
+          pcall(function()
+            startScanNoClip()
+            r2.AssemblyLinearVelocity = Vector3.zero
+            r2.CFrame = CFrame.new(scanPos, scanPos + direction)
+          end)
+        end
+        simpleWait(0.2)
 
-          simpleWait(0.2)
-
-        -- Lanjut ke wall berikutnya, bukan +150/+200 stud.
-        startIndex += 1
-        _G.ScanWallIndex = startIndex
-        lastWallX, lastWallZ = wall.Pos.X, wall.Pos.Z
-      end
+        distance += SCAN_STEP
+        _G.ScanDist = distance
       end
     end
-
     task.wait(0.1)
   end
 
   _G.__ScanRunning = false
   _G.ScanInfo = "-"
-  -- Scan selesai/stop: matikan scan-noclip, balikin collision kalau SafeMode juga mati.
   pcall(function() stopScanNoClip() end)
   if _G.SafeMode then exitSafeMode() end
   setScanBtn()
-  say("STOP wall scan.")
+  say("STOP scan.")
 end
 
 local function farmLoop()
@@ -1510,7 +1357,7 @@ local function farmLoop()
   local safeSpot = r0 and r0.CFrame or nil
   local idle = 0
 
-  -- ⭐ FIX: live stop flag
+  -- â­ FIX: live stop flag
   while _G.ChestFarm and not isStopFlag() do
     if hpFrac() < SAFE_HP_ENTER then
       if not waitRecovery() then break end
@@ -1543,7 +1390,7 @@ local function farmLoop()
     else
       idle = 0
       for _, e in ipairs(chests) do
-        if not _G.ChestFarm or isStopFlag() then break end  -- ⭐
+        if not _G.ChestFarm or isStopFlag() then break end  -- â­
         if hpFrac() < SAFE_HP_ENTER then
           if not waitRecovery() then break end
         end
@@ -1638,12 +1485,12 @@ local function autoSkipLoop()
   if _G.__SkipRunning then return end
   _G.__SkipRunning = true
   say("Auto-skip ON.")
-  -- ⭐ FIX: live stop flag
+  -- â­ FIX: live stop flag
   while AUTO_SKIP_CUTSCENE and not isStopFlag() do
     if skipVisible() then
       say("Cutscene skippable.")
       for i = 1, SKIP_ROUNDS do
-        if not skipVisible() or isStopFlag() then  -- ⭐
+        if not skipVisible() or isStopFlag() then  -- â­
           cutSkipped += 1
           say("Cutscene ke-skip (" .. cutSkipped .. ").")
           break
@@ -1716,7 +1563,7 @@ local function dialogueSkipLoop()
   if _G.__DialogRunning then return end
   _G.__DialogRunning = true
   say("Dialogue-skip ON.")
-  -- ⭐ FIX: live stop flag
+  -- â­ FIX: live stop flag
   while AUTO_SKIP_DIALOGUE and not isStopFlag() do
     if dialogueActive() then
       local sp = dialogueSpeaker()
@@ -1724,7 +1571,7 @@ local function dialogueSkipLoop()
       if voteSkipRF then pcall(function() voteSkipRF:InvokeServer() end) end
       if voteSkipPrivRF then pcall(function() voteSkipPrivRF:InvokeServer() end) end
       for i = 1, DIALOGUE_MAX do
-        if not dialogueActive() or isStopFlag() then  -- ⭐
+        if not dialogueActive() or isStopFlag() then  -- â­
           dialogSkipped += 1
           say("Dialogue selesai (" .. dialogSkipped .. ").")
           break
