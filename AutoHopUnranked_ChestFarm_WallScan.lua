@@ -1,4 +1,4 @@
-﻿-- AutoHopUnranked_ChestFarm_WallScan.lua  (SINGLE-EXECUTE / PERSISTENT / MOBILE-READY / LOW POLY)
+-- AutoHopUnranked_ChestFarm_WallScan.lua  (SINGLE-EXECUTE / PERSISTENT / MOBILE-READY / LOW POLY)
 -- Loop otomatis: Lobby -> hop Unranked Solo -> Earth -> Chest Farm -> Lobby -> ...
 -- EndSession v3 terintegrasi sebagai fallback + semua fix konflik.
 -- vWallScan: per-wall maju + linear sampai 36000, no-dodge/aim, scan-noclip, skip mimic.
